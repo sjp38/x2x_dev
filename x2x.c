@@ -1817,8 +1817,6 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
   Bool      bAbortedDisconnect;
   Bool      vert;
 
-  static unsigned sj_fc;
-  debug("%s called %u!\n", __func__, sj_fc++);
   vert = pDpyInfo->vertical;
 
   /* find the screen */
@@ -1887,15 +1885,6 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
     {
       DoDPMSForceLevel(pShadow, DPMSModeOn);
     }
-#if 0
-        /* vertical conversion table */
-        for (counter = 0; counter < 600; ++counter)
-          yTable[counter] = (counter * toHeight) / fromHeight;
-
-        /* horizontal conversion table entries */
-        for (counter = 0; counter < 800; ++counter)
-          xTable[counter] = (counter * toWidth) / fromWidth;
-#endif
 
     debug("sj: Call XTestFakeMotionEvent %d/%d to %d/%d... maybe %d/%d\n",
 		      pEv->x_root,
