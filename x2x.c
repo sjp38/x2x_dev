@@ -117,6 +117,8 @@ extern Status DPMSForceLevel(Display *, unsigned short);
 
 
 #define SJPARK 1
+#define DEBUG_SJ
+
 #define DEBUG
 
 #ifndef MIN
@@ -383,6 +385,14 @@ static int dummy;
 static Display *fromWin = (Display *)&dummy;
 static HWND hWndSave;
 static HINSTANCE m_instance;
+#endif
+
+#ifdef DEBUG_SJ
+#define debug_sj printf
+#else
+void debug_sj(const char *fmt, ...)
+{
+}
 #endif
 
 #ifdef DEBUG
@@ -1328,7 +1338,7 @@ PDPYINFO pDpyInfo;
     pDpyInfo->yTables[screenNum] = yTable =
       (short *)xmalloc(sizeof(short) * fromHeight);
 
-    debug("fromWidth/Height: %d/%d, toWidth/Height: %d/%d\n",
+    debug_sj("fromWidth/Height: %d/%d, toWidth/Height: %d/%d\n",
 		    fromWidth, fromHeight, toWidth, toHeight);
     if (noScale) {
         /* TODO:
@@ -1354,7 +1364,7 @@ PDPYINFO pDpyInfo;
 
         /* horizontal conversion table entries */
         for (counter = 0; counter < 800; ++counter)
-          xTable[counter] = (counter * toWidth) / 80fromWidth0;
+          xTable[counter] = (counter * toWidth) / 800;
 
 #else
         /* vertical conversion table */
@@ -1886,7 +1896,7 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
       DoDPMSForceLevel(pShadow, DPMSModeOn);
     }
 
-    debug("sj: Call XTestFakeMotionEvent %d/%d to %d/%d... maybe %d/%d\n",
+    debug_sj("sj: Call XTestFakeMotionEvent %d/%d to %d/%d... maybe %d/%d\n",
 		      pEv->x_root,
 		      pEv->y_root,
                       pDpyInfo->xTables[toScreenNum][pEv->x_root],
