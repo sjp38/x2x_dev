@@ -116,7 +116,8 @@ extern Status DPMSForceLevel(Display *, unsigned short);
 
 
 
-/*#define DEBUG*/
+#define SJPARK 1
+#define DEBUG
 
 #ifndef MIN
 #define MIN(x,y) (((x) < (y)) ? (x) : (y))
@@ -1327,6 +1328,8 @@ PDPYINFO pDpyInfo;
     pDpyInfo->yTables[screenNum] = yTable =
       (short *)xmalloc(sizeof(short) * fromHeight);
 
+    debug("fromWidth/Height: %d/%d, toWidth/Height: %d/%d\n",
+		    fromWidth, fromHeight, toWidth, toHeight);
     if (noScale) {
         /* TODO:
             - the fake tables should be built as "starting ignored", 1:1 map
@@ -1344,6 +1347,16 @@ PDPYINFO pDpyInfo;
         for (counter = 0; counter < fromWidth; ++counter)
           xTable[counter] = counter % (toWidth - 1);
     } else {
+#if SJPARK
+        /* vertical conversion table */
+        for (counter = 0; counter < 600; ++counter)
+          yTable[counter] = (counter * toHeight) / 600;
+
+        /* horizontal conversion table entries */
+        for (counter = 0; counter < 800; ++counter)
+          xTable[counter] = (counter * toWidth) / 80fromWidth0;
+
+#else
         /* vertical conversion table */
         for (counter = 0; counter < fromHeight; ++counter)
           yTable[counter] = (counter * toHeight) / fromHeight;
@@ -1351,6 +1364,7 @@ PDPYINFO pDpyInfo;
         /* horizontal conversion table entries */
         for (counter = 0; counter < fromWidth; ++counter)
           xTable[counter] = (counter * toWidth) / fromWidth;
+#endif
     }
 
     /* adjustment for boundaries */
@@ -1803,6 +1817,8 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
   Bool      bAbortedDisconnect;
   Bool      vert;
 
+  static unsigned sj_fc;
+  debug("%s called %u!\n", __func__, sj_fc++);
   vert = pDpyInfo->vertical;
 
   /* find the screen */
@@ -1871,7 +1887,25 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
     {
       DoDPMSForceLevel(pShadow, DPMSModeOn);
     }
+#if 0
+        /* vertical conversion table */
+        for (counter = 0; counter < 600; ++counter)
+          yTable[counter] = (counter * toHeight) / fromHeight;
 
+        /* horizontal conversion table entries */
+        for (counter = 0; counter < 800; ++counter)
+          xTable[counter] = (counter * toWidth) / fromWidth;
+#endif
+
+    debug("sj: Call XTestFakeMotionEvent %d/%d to %d/%d... maybe %d/%d\n",
+		      pEv->x_root,
+		      pEv->y_root,
+                      pDpyInfo->xTables[toScreenNum][pEv->x_root],
+		      pDpyInfo->yTables[toScreenNum][pEv->y_root],
+		      pEv->x_root * 3840 / 800,
+		      pEv->y_root * 1080 / 600
+		    );
+       
     XTestFakeMotionEvent(pShadow->dpy, toScreenNum,
                       vert?pDpyInfo->xTables[toScreenNum][pEv->x_root]:toCoord,
                       vert?toCoord:pDpyInfo->yTables[toScreenNum][pEv->y_root],
@@ -2092,10 +2126,11 @@ XKeyEvent *pEv;
   keysym = XkbKeycodeToKeysym(pDpyInfo->fromDpy, pEv->keycode, 0, 0);
   bPress = (pEv->type == KeyPress);
 
-#ifdef DEBUG
-  printf("key '%s' %s (state=0x%x)\n",
+#if SJPARK
+#else
+  debug("key '%s' %s (state=0x%x)\n",
 	XKeysymToString(keysym), (bPress ? "pressed" : "released"), pEv->state);
-#endif
+#endif /* SJPARK
 
   /* If CapsLock is on, we need to do some funny business to make sure the */
   /* "to" display does the right thing */
