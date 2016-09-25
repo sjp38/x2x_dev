@@ -1957,6 +1957,15 @@ XCrossingEvent *pEv;
   Display *fromDpy = pDpyInfo->fromDpy;
   XMotionEvent xmev;
 
+  if (pEv->x_root < compRegLeft)
+	  pEv->x_root = compRegLeft;
+  if (pEv->x_root > compRegRight)
+	  pEv->x_root = compRegRight;
+  if (pEv->y_root < compRegUp)
+	  pEv->y_root = compRegUp;
+  if (pEv->y_root > compRegLow)
+	  pEv->y_root = compRegLow;
+
   if ((pEv->mode == NotifyNormal) &&
       (pDpyInfo->mode == X2X_DISCONNECTED) && (dpy == pDpyInfo->fromDpy)) {
     DoConnect(pDpyInfo);
