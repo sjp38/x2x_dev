@@ -1364,6 +1364,10 @@ PDPYINFO pDpyInfo;
 
     debug_sj("fromWidth/Height: %d/%d, toWidth/Height: %d/%d\n",
 		    fromWidth, fromHeight, toWidth, toHeight);
+    if (compRegRight == 0)
+	    compRegRight = fromWidth;
+    if (compRegLow == 0)
+	    compRegLow = fromHeight;
     if (noScale) {
         /* TODO:
             - the fake tables should be built as "starting ignored", 1:1 map
@@ -1381,34 +1385,15 @@ PDPYINFO pDpyInfo;
         for (counter = 0; counter < fromWidth; ++counter)
           xTable[counter] = counter % (toWidth - 1);
     } else {
-#if SJPARK
-        /* vertical conversion table */
         for (counter = 0; counter < fromHeight; ++counter)
-          yTable[counter] = 100;
-
-        /* horizontal conversion table entries */
+          yTable[counter] = (counter < compRegUp || counter > compRegLow) ?
+                   100 :
+                   (counter - compRegUp) * toHeight / (compRegLow - compRegUp);
         for (counter = 0; counter < fromWidth; ++counter)
-          xTable[counter] = 100;
-
-	const unsigned sj_from_width = SJ_MAINM_R - SJ_MAINM_L;
-	const unsigned sj_from_height = SJ_MAINM_D - SJ_MAINM_U;
-        /* vertical conversion table */
-        for (counter = 0; counter < sj_from_height; ++counter)
-          yTable[counter] = (counter * toHeight) / sj_from_height;
-
-        /* horizontal conversion table entries */
-        for (counter = 0; counter < sj_from_width; ++counter)
-          xTable[counter] = (counter * toWidth) / sj_from_width;
-
-#else
-        /* vertical conversion table */
-        for (counter = 0; counter < fromHeight; ++counter)
-          yTable[counter] = (counter * toHeight) / fromHeight;
-
-        /* horizontal conversion table entries */
-        for (counter = 0; counter < fromWidth; ++counter)
-          xTable[counter] = (counter * toWidth) / fromWidth;
-#endif
+          xTable[counter] = (counter < compRegLeft || counter > compRegRight) ?
+                   100 :
+                   (counter - compRegLeft) * toWidth /
+                   (compRegRight - compRegLeft);
     }
 
     /* adjustment for boundaries */
