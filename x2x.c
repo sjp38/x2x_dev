@@ -116,16 +116,7 @@ extern Status DPMSForceLevel(Display *, unsigned short);
 
 
 
-#define SJPARK 1
 #define DEBUG_SJ
-
-#define SJ_MAINM_L 0
-#define SJ_MAINM_U 0
-#define SJ_MAINM_R 1366
-#define SJ_MAINM_D 768
-
-#define SJ_TOS_W (1920 * 2)
-#define SJ_TOS_H (1080)
 
 #define DEBUG
 
@@ -2144,11 +2135,8 @@ XKeyEvent *pEv;
   keysym = XkbKeycodeToKeysym(pDpyInfo->fromDpy, pEv->keycode, 0, 0);
   bPress = (pEv->type == KeyPress);
 
-#if SJPARK
-#else
   debug("key '%s' %s (state=0x%x)\n",
 	XKeysymToString(keysym), (bPress ? "pressed" : "released"), pEv->state);
-#endif /* SJPARK
 
   /* If CapsLock is on, we need to do some funny business to make sure the */
   /* "to" display does the right thing */
