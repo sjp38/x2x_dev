@@ -1378,6 +1378,8 @@ PDPYINFO pDpyInfo;
           yTable[counter] = (counter < compRegUp || counter > compRegLow) ?
                    100 :
                    (counter - compRegUp) * toHeight / (compRegLow - compRegUp);
+
+        /* vertical conversion table */
         for (counter = 0; counter < fromWidth; ++counter)
           xTable[counter] = (counter < compRegLeft || counter > compRegRight) ?
                    100 :
@@ -1904,6 +1906,7 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
       DoDPMSForceLevel(pShadow, DPMSModeOn);
     }
 
+#if DEBUG_COMPLREG
     static unsigned lc;
 
     if (lc++ % 10 == 0)
@@ -1912,6 +1915,7 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
                       pEv->y_root,
                       pDpyInfo->xTables[toScreenNum][pEv->x_root],
                       pDpyInfo->yTables[toScreenNum][pEv->y_root]);
+#endif
 
     XTestFakeMotionEvent(pShadow->dpy, toScreenNum,
                       vert?pDpyInfo->xTables[toScreenNum][pEv->x_root]:toCoord,
