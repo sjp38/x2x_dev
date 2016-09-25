@@ -1984,8 +1984,6 @@ XCrossingEvent *pEv;
       xmev.y_root = pEv->y_root;
     }
     xmev.same_screen = True;
-    debug_cmpreg("ProcessEnterNotify call ProcessMotionNotify with %d %d\n",
-		    xmev.x_root, xmev.y_root);
     ProcessMotionNotify(NULL, pDpyInfo, &xmev);
   }  /* END if NotifyNormal... */
   return False;
