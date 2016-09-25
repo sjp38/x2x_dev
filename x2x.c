@@ -1374,10 +1374,13 @@ PDPYINFO pDpyInfo;
         for (counter = 0; counter < fromWidth; ++counter)
           xTable[counter] = counter % (toWidth - 1);
     } else {
+        /* vertical conversion table */
         for (counter = 0; counter < fromHeight; ++counter)
           yTable[counter] = (counter < compRegUp || counter > compRegLow) ?
                    100 :
                    (counter - compRegUp) * toHeight / (compRegLow - compRegUp);
+
+        /* vertical conversion table */
         for (counter = 0; counter < fromWidth; ++counter)
           xTable[counter] = (counter < compRegLeft || counter > compRegRight) ?
                    100 :
