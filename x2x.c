@@ -1366,6 +1366,14 @@ PDPYINFO pDpyInfo;
           xTable[counter] = counter % (toWidth - 1);
     } else {
 #if SJPARK
+        /* vertical conversion table */
+        for (counter = 0; counter < fromHeight; ++counter)
+          yTable[counter] = 100;
+
+        /* horizontal conversion table entries */
+        for (counter = 0; counter < fromWidth; ++counter)
+          xTable[counter] = 100;
+
 	const unsigned sj_from_width = SJ_MAINM_R - SJ_MAINM_L;
 	const unsigned sj_from_height = SJ_MAINM_D - SJ_MAINM_U;
         /* vertical conversion table */
