@@ -385,6 +385,10 @@ static int     logicalOffset= 0;
 static int     nButtons     = 0;
 static KeySym  buttonmap[N_BUTTONS + 1][MAX_BUTTONMAPEVENTS + 1];
 static Bool    noScale      = False;
+static int     compRegLeft  = 0;
+static int     compRegRight = 0;
+static int     compRegUp    = 0;
+static int     compRegLow   = 0;
 
 #ifdef WIN_2_X
 /* These are used to allow pointer comparisons */
@@ -753,6 +757,18 @@ char **argv;
       puts(lawyerese);
     } else if (!strcasecmp(argv[arg], "-noscale")) {
       noScale = True;
+    } else if (!strcasecmp(argv[arg], "-completeregionleft")) {
+      if (++arg >= argc) Usage();
+      compRegLeft = atoi(argv[arg]);
+    } else if (!strcasecmp(argv[arg], "-completeregionright")) {
+      if (++arg >= argc) Usage();
+      compRegRight = atoi(argv[arg]);
+    } else if (!strcasecmp(argv[arg], "-completeregionup")) {
+      if (++arg >= argc) Usage();
+      compRegUp = atoi(argv[arg]);
+    } else if (!strcasecmp(argv[arg], "-completeregionlow")) {
+      if (++arg >= argc) Usage();
+      compRegLow = atoi(argv[arg]);
     } else {
       Usage();
     } /* END if... */
