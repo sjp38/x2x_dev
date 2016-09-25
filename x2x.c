@@ -2147,8 +2147,10 @@ XKeyEvent *pEv;
   keysym = XkbKeycodeToKeysym(pDpyInfo->fromDpy, pEv->keycode, 0, 0);
   bPress = (pEv->type == KeyPress);
 
-  debug("key '%s' %s (state=0x%x)\n",
+#ifdef DEBUG
+  printf("key '%s' %s (state=0x%x)\n",
 	XKeysymToString(keysym), (bPress ? "pressed" : "released"), pEv->state);
+#endif
 
   /* If CapsLock is on, we need to do some funny business to make sure the */
   /* "to" display does the right thing */
