@@ -390,10 +390,10 @@ static HWND hWndSave;
 static HINSTANCE m_instance;
 #endif
 
-#ifdef DEBUG_SJ
-#define debug_sj printf
+#ifdef DEBUG_COMPLREG
+#define debug_cmpreg printf
 #else
-void debug_sj(const char *fmt, ...)
+void debug_cmpreg(const char *fmt, ...)
 {
 }
 #endif
@@ -1353,7 +1353,7 @@ PDPYINFO pDpyInfo;
     pDpyInfo->yTables[screenNum] = yTable =
       (short *)xmalloc(sizeof(short) * fromHeight);
 
-    debug_sj("fromWidth/Height: %d/%d, toWidth/Height: %d/%d\n",
+    debug_cmpreg("fromWidth/Height: %d/%d, toWidth/Height: %d/%d\n",
 		    fromWidth, fromHeight, toWidth, toHeight);
     if (compRegRight == 0)
 	    compRegRight = fromWidth;
@@ -1909,7 +1909,7 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
     static unsigned lc;
 
     if (lc++ % 10 == 0)
-      debug_sj("sj: Call XTestFakeMotionEvent %d/%d to %d/%d\n",
+      debug_cmpreg("sj: Call XTestFakeMotionEvent %d/%d to %d/%d\n",
                       pEv->x_root,
                       pEv->y_root,
                       pDpyInfo->xTables[toScreenNum][pEv->x_root],
@@ -1972,6 +1972,8 @@ XCrossingEvent *pEv;
       xmev.y_root = pEv->y_root;
     }
     xmev.same_screen = True;
+    debug_cmpreg("ProcessEnterNotify call ProcessMotionNotify with %d %d\n",
+		    xmev.x_root, xmev.y_root);
     ProcessMotionNotify(NULL, pDpyInfo, &xmev);
   }  /* END if NotifyNormal... */
   return False;
@@ -2109,6 +2111,7 @@ XButtonEvent *pEv;
           xmev.y_root = pEv->y_root;
         }
         xmev.same_screen = True;
+
         ProcessMotionNotify(NULL, pDpyInfo, &xmev);
       } else { /* disconnect */
         DoDisconnect(pDpyInfo);
