@@ -1914,13 +1914,15 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
       DoDPMSForceLevel(pShadow, DPMSModeOn);
     }
 
-    debug_sj("sj: Call XTestFakeMotionEvent %d/%d to %d/%dn",
-		      pEv->x_root,
-		      pEv->y_root,
+    static unsigned lc;
+
+    if (lc++ % 10 == 0)
+      debug_sj("sj: Call XTestFakeMotionEvent %d/%d to %d/%d\n",
+                      pEv->x_root,
+                      pEv->y_root,
                       pDpyInfo->xTables[toScreenNum][pEv->x_root],
-		      pDpyInfo->yTables[toScreenNum][pEv->y_root]
-		    );
-       
+                      pDpyInfo->yTables[toScreenNum][pEv->y_root]);
+
     XTestFakeMotionEvent(pShadow->dpy, toScreenNum,
                       vert?pDpyInfo->xTables[toScreenNum][pEv->x_root]:toCoord,
                       vert?toCoord:pDpyInfo->yTables[toScreenNum][pEv->y_root],
