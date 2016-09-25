@@ -2121,7 +2121,6 @@ XButtonEvent *pEv;
           xmev.y_root = pEv->y_root;
         }
         xmev.same_screen = True;
-
         ProcessMotionNotify(NULL, pDpyInfo, &xmev);
       } else { /* disconnect */
         DoDisconnect(pDpyInfo);
