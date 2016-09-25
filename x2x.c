@@ -1906,7 +1906,7 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
       DoDPMSForceLevel(pShadow, DPMSModeOn);
     }
 
-#if DEBUG_COMPLREG
+#ifdef DEBUG_COMPLREG
     static unsigned lc;
 
     if (lc++ % 10 == 0)
