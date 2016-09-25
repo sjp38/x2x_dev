@@ -119,6 +119,14 @@ extern Status DPMSForceLevel(Display *, unsigned short);
 #define SJPARK 1
 #define DEBUG_SJ
 
+#define SJ_MAINM_L 0
+#define SJ_MAINM_U 0
+#define SJ_MAINM_R 800
+#define SJ_MAINM_D 600
+
+#define SJ_TOS_W (1920 * 2)
+#define SJ_TOS_H (1080)
+
 #define DEBUG
 
 #ifndef MIN
@@ -1358,13 +1366,15 @@ PDPYINFO pDpyInfo;
           xTable[counter] = counter % (toWidth - 1);
     } else {
 #if SJPARK
+	const unsigned sj_from_width = SJ_MAINM_R - SJ_MAINM_L;
+	const unsigned sj_from_height = SJ_MAINM_D - SJ_MAINM_U;
         /* vertical conversion table */
-        for (counter = 0; counter < 600; ++counter)
-          yTable[counter] = (counter * toHeight) / 600;
+        for (counter = 0; counter < sj_from_height; ++counter)
+          yTable[counter] = (counter * toHeight) / sj_from_height;
 
         /* horizontal conversion table entries */
-        for (counter = 0; counter < 800; ++counter)
-          xTable[counter] = (counter * toWidth) / 800;
+        for (counter = 0; counter < sj_from_width; ++counter)
+          xTable[counter] = (counter * toWidth) / sj_from_width;
 
 #else
         /* vertical conversion table */
@@ -1901,8 +1911,8 @@ XMotionEvent *pEv; /* caution: might be pseudo-event!!! */
 		      pEv->y_root,
                       pDpyInfo->xTables[toScreenNum][pEv->x_root],
 		      pDpyInfo->yTables[toScreenNum][pEv->y_root],
-		      pEv->x_root * 3840 / 800,
-		      pEv->y_root * 1080 / 600
+		      pEv->x_root * SJ_TOS_W / (SJ_MAINM_R - SJ_MAINM_L),
+		      pEv->y_root * SJ_TOS_H / (SJ_MAINM_D - SJ_MAINM_U)
 		    );
        
     XTestFakeMotionEvent(pShadow->dpy, toScreenNum,
